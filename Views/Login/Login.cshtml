@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card card-custom">
+                <div class="card-header-custom">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-4x text-primary opacity-25"></i>
+                    </div>
+                    <h3 class="fw-bold">Bienvenido</h3>
+                    <p class="text-muted small">Ingresa tus credenciales para continuar</p>
+                </div>
+
+                <div class="card-body px-4 pb-4">
+                    <form method="post">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="inputEmail" type="email" name="correo" placeholder="name@example.com" required />
+                            <label for="inputEmail" class="text-muted small">Correo electrónico</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Contraseña" required />
+                            <label for="inputPassword" class="text-muted small">Contraseña</label>
+                        </div>
+
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger border-0 small d-flex align-items-center">
+                                <i class="fas fa-exclamation-circle me-2"></i> @ViewBag.Error
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-primary btn-custom btn-lg" type="submit">
+                                Iniciar Sesión
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer bg-light border-0 py-3 text-center">
+                    <div class="mb-2 small">
+                        <a asp-action="Recuperar" class="text-decoration-none text-muted">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <div class="small text-muted">
+                        ¿No tienes cuenta? <a asp-action="Registrar" class="fw-bold text-decoration-none">Regístrate aquí</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        @if (TempData["MensajeRegistro"] != null)
+        {
+                <text>
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: '@Html.Raw(TempData["MensajeRegistro"])',
+                        confirmButtonColor: '#4361ee'
+                    });
+                </text>
+        }
+    </script>
+}

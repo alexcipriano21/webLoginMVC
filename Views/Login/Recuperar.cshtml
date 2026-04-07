@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Recuperar";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card card-custom">
+                <div class="card-header-custom">
+                    <div class="mb-3">
+                        <i class="fas fa-key fa-3x text-secondary opacity-25"></i>
+                    </div>
+                    <h4 class="fw-bold">Recuperar Acceso</h4>
+                    <p class="text-muted small px-3">Enviaremos un token de seguridad a tu bandeja de entrada.</p>
+                </div>
+
+                <div class="card-body px-4 pb-4">
+                    @if (ViewBag.TokenGenerado == null)
+                    {
+                        <form method="post">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="email" name="correo" placeholder="Correo" required />
+                                <label class="text-muted small">Correo electrónico registrado</label>
+                            </div>
+                            
+                            @if (ViewBag.Error != null)
+                            {
+                                <div class="alert alert-danger border-0 small">
+                                    <i class="fas fa-exclamation-circle me-2"></i> @ViewBag.Error
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button class="btn btn-dark btn-custom" type="submit">Enviar Instrucciones</button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-primary border-0 shadow-sm mb-4 text-center">
+                            <p class="mb-1 small">Tu token de seguridad es:</p>
+                            <h3 class="fw-bold mb-0">@ViewBag.TokenGenerado</h3>
+                        </div>
+
+                        <form asp-action="ValidarToken" method="post">
+                            <input type="hidden" name="correo" value="@ViewBag.CorreoUsuario" />
+                            <input type="hidden" name="tokenReal" value="@ViewBag.TokenGenerado" />
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="text" name="tokenIngresado" required />
+                                <label class="text-muted small">Ingresa el token de arriba</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="password" name="nuevaPassword" required />
+                                <label class="text-muted small">Nueva Contraseña</label>
+                            </div>
+                            <div class="d-grid gap-2 mt-4">
+                                <button class="btn btn-primary btn-custom" type="submit">Restablecer Contraseña</button>
+                            </div>
+                        </form>
+                    }
+                </div>
+
+                <div class="card-footer bg-white border-0 py-3 text-center">
+                    <a asp-action="Login" class="text-decoration-none small text-muted">
+                        <i class="fas fa-chevron-left me-1 small"></i> Volver al inicio de sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
