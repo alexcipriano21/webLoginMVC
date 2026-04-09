@@ -64,12 +64,13 @@ namespace webLoginMVC.Controllers
             }
 
             [HttpPost]
-            public IActionResult ValidarToken(string correo, string tokenIngresado, string tokenReal, string nuevaPassword)
+            public IActionResult ValidarToken(string correo, string tokenIngresado, string nuevaPassword)
             {
-                if (tokenIngresado == tokenReal)
+                string tokenRealDeLaBD = daoUsuario.obtenerToken(correo);
+
+                if (tokenRealDeLaBD != null && tokenIngresado == tokenRealDeLaBD)
                 {
                     string hash = BCrypt.Net.BCrypt.HashPassword(nuevaPassword);
-
                     daoUsuario.actualizarPassword(correo, hash);
 
                     TempData["MensajeRegistro"] = "Contraseña actualizada correctamente.";

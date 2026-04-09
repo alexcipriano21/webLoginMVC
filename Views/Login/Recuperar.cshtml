@@ -44,7 +44,6 @@
 
                         <form asp-action="ValidarToken" method="post">
                             <input type="hidden" name="correo" value="@ViewBag.CorreoUsuario" />
-                            <input type="hidden" name="tokenReal" value="@ViewBag.TokenGenerado" />
 
                             <div class="form-floating mb-3">
                                 <input class="form-control" type="text" name="tokenIngresado" required />

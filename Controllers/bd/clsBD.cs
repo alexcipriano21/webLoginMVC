@@ -25,21 +25,11 @@ namespace webLoginMVC.Controllers.bd
             da.Fill(dt);    
             return dt;
         }
-        internal string[] getRegistro()
+        internal DataRow getDataRow()
         {
             DataTable dt = getDataTable();
-            if (dt.Rows.Count == 0) return null;
-            return System.Array.ConvertAll(dt.Rows[0].ItemArray, x => x.ToString().Trim());
-        }
-        internal string[][] getRegistros()
-        {
-            DataTable dt = getDataTable();
-            if (dt.Rows.Count == 0) return null;
-            int i = 0;
-            string[][] mRegistros = new string[dt.Rows.Count][];
-            foreach (DataRow dr in dt.Rows)
-                mRegistros[i++] = System.Array.ConvertAll(dr.ItemArray, x => x.ToString().Trim());
-            return mRegistros;
+            if (dt.Rows.Count == 0) return null; 
+            return dt.Rows[0]; 
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace webLoginMVC.Models
+﻿using System.Data;
+
+namespace webLoginMVC.Models
 {
     public class Usuario
     {
@@ -8,16 +10,16 @@
         public string password_hash { get; set; }
         public string rol { get; set; }
         public Usuario() { }
-        public Usuario(string[] aRegistro) 
+        public Usuario(DataRow dr)
         {
-            if (aRegistro != null)
+            if (dr != null)
             {
-                idUsuario = int.Parse(aRegistro[0]);
-                usuario = aRegistro[1];
-                correo = aRegistro[2];
-                password_hash = aRegistro[3];
-                rol = aRegistro[4];
+                idUsuario = Convert.ToInt32(dr["id"]);
+                usuario = dr["usuario"].ToString();
+                correo = dr["correo"].ToString();
+                password_hash = dr["password_hash"].ToString();
+                rol = dr["rol"].ToString();
             }
-        }   
+        }
     }
 }

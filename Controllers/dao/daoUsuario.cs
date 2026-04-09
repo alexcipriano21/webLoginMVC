@@ -1,5 +1,7 @@
-﻿using webLoginMVC.Controllers.bd;
+﻿using System.Data;
+using webLoginMVC.Controllers.bd;
 using webLoginMVC.Models;
+using static System.Net.WebRequestMethods;
 
 namespace webLoginMVC.Controllers.dao
 {
@@ -15,7 +17,9 @@ namespace webLoginMVC.Controllers.dao
         internal Usuario getUsuarioLogin(string correo)
         {
             clsBD.Sentencia("sp_getUsuarioLogin '" + correo + "'");
-            return new Usuario(clsBD.getRegistro());
+            DataRow dr = clsBD.getDataRow();
+            if (dr != null) return new Usuario(dr);
+            return null;
         }
         internal void registrarUsuario(string usuario,string correo,string hash)
         {
@@ -26,6 +30,16 @@ namespace webLoginMVC.Controllers.dao
         {
             clsBD.Sentencia("sp_generarTokenRecuperacion '" +correo + "','" +token + "','" +expiracion + "'");
             clsBD.getDataTable();
+        }
+        internal string obtenerToken(string correo)
+        {
+            clsBD.Sentencia("sp_obtenerTokenRecuperacion '" + correo + "'");
+            DataRow fila = clsBD.getDataRow();
+            if (fila != null)
+            {
+                return fila["token_recuperacion"].ToString();
+            }
+            return null;
         }
         internal void actualizarPassword(string correo, string nuevoHash)
         {

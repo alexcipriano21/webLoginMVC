@@ -4,31 +4,36 @@ GO
 USE Login;
 GO
 
+-- TABLA DE ROLES:
 CREATE TABLE roles (
-    id INT IDENTITY(1,1) PRIMARY KEY,
+    id INT IDENTITY(1,1) PRIMARY KEY, 
     nombre_rol VARCHAR(30) NOT NULL UNIQUE
 );
 
 INSERT INTO roles (nombre_rol)
 VALUES ('Colaborador');
 
+-- 3. TABLA DE USUARIOS
 CREATE TABLE usuarios (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    usuario VARCHAR(50) NOT NULL UNIQUE,
-    correo VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    rol_id INT NOT NULL,
-    token_recuperacion VARCHAR(100) NULL,
-    expiracion_token DATETIME NULL,
-    fecha_creacion DATETIME DEFAULT GETDATE(),
-    activo BIT DEFAULT 1,
+    usuario VARCHAR(50) NOT NULL UNIQUE,          
+    correo VARCHAR(100) NOT NULL UNIQUE,         
+    password_hash VARCHAR(255) NOT NULL,          
+    rol_id INT NOT NULL,                          
+    token_recuperacion VARCHAR(100) NULL,      
+    expiracion_token DATETIME NULL,              
+    fecha_creacion DATETIME DEFAULT GETDATE(),    
+    activo BIT DEFAULT 1,                         
 
     FOREIGN KEY (rol_id)
         REFERENCES roles(id)
 );
-
 GO
 
+-- PROCEDIMIENTOS ALMACENADOS 
+
+-- Registrar un usuario nuevo
+-- Simplemente inserta los datos recibidos asignándole el rol '1' por defecto (Colaborador)
 CREATE PROCEDURE sp_registrarUsuario
     @p_usuario VARCHAR(50),
     @p_correo VARCHAR(100),
@@ -42,6 +47,9 @@ BEGIN
 END
 GO
 
+-- Obtener datos de inicio de sesión
+-- Busca al usuario por su correo cruzando datos con los roles (JOIN) para traer el nombre del rol.
+-- Solo trae cuentas que estén activas (activo = 1).
 CREATE PROCEDURE sp_getUsuarioLogin
     @p_correo VARCHAR(100)
 AS
@@ -60,6 +68,7 @@ BEGIN
 END
 GO
 
+-- Registra el nuevo Token enviado al correo del usuario y su hora de caducidad.
 CREATE PROCEDURE sp_generarTokenRecuperacion
     @p_correo VARCHAR(100),
     @p_token VARCHAR(100),
@@ -73,6 +82,20 @@ BEGIN
 END
 GO
 
+-- Cuando el usuario envía su código a la página Web, el servidor C# ejecuta esto 
+-- para descubrir la respuesta verdadera y evitar trampas/hackeos.
+CREATE PROCEDURE sp_obtenerTokenRecuperacion
+    @p_correo VARCHAR(100)
+AS
+BEGIN
+    SELECT token_recuperacion 
+    FROM usuarios 
+    WHERE correo = @p_correo;
+END
+GO
+
+-- Actualizar clave y limpiar los rastros
+-- Reemplaza la contraseña antigua o perdida por el nuevo "Hash"
 CREATE PROCEDURE sp_actualizarPassword
     @p_correo VARCHAR(100),
     @p_nuevo_hash VARCHAR(255)
@@ -85,5 +108,3 @@ BEGIN
     WHERE correo = @p_correo;
 END
 GO
-
--- USE Login; DELETE FROM usuarios;
