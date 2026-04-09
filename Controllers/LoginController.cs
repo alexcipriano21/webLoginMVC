@@ -12,6 +12,10 @@ namespace webLoginMVC.Controllers
             {
                 daoUsuario = new daoUsuario(config);
             }
+            public IActionResult Index()
+            {
+                return View();
+            }
             public IActionResult Login()
             {
                 return View();
@@ -23,7 +27,7 @@ namespace webLoginMVC.Controllers
                 if (usuario != null && usuario.password_hash != null)
                 {
                     bool esValida = BCrypt.Net.BCrypt.Verify(password, usuario.password_hash);
-                    if (esValida) return RedirectToAction("Index", "Home");
+                    if (esValida) return RedirectToAction("Index");
                 }
                 ViewBag.Error = "Correo o contraseña incorrectos";
                 return View();
